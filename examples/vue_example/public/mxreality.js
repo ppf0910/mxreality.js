@@ -2028,7 +2028,7 @@
 
                 function calcDeltaUp(y, clientHeight) {
                     let zoom = 3
-                    if(AVR.isCrossScreen()) zoom = 5
+                    if(AVR.isCrossScreen()) zoom = 6
                     return zoom * Math.PI * y / clientHeight * scope.rotateSpeed
                 }
                 var mouseDown = false;
@@ -2472,7 +2472,7 @@
         toolBar: function (container) {
             var pre = "_toolBar";
             var toolbar = this.createTag('div', {
-                'style': '-moz-user-select:none;-webkit-user-select:none;user-select:none;position:absolute;background:rgba(0,0,0,.2);width:100%;height:2.2rem;bottom:0rem',
+                'style': '-moz-user-select:none;-webkit-user-select:none;user-select:none;position:absolute;background:rgba(0,0,0,.2);width:100%;height:2.2rem;bottom:0.3rem',
                 'class': pre + 'Area'
             });
 
@@ -2520,9 +2520,9 @@
                 'style': 'display:flex;display: -webkit-flex;display: -webkit-box;display: -moz-box;display: -ms-flexbox;margin:0;padding:0;list-style:none;height:100%;'
             }, null);
 
-            moreList.appendChild(moreListUl);
+            // moreList.appendChild(moreListUl);
             // toolbar.appendChild(moreBtn);
-            toolbar.appendChild(moreList);
+            // toolbar.appendChild(moreList);
 
             var about = this.createTag('div', {
                 'style': 'width:2.2rem;height:2.2rem;position:inherit;right:1rem;margin-left:-1.1rem;margin-top:0.6rem;color:#fff;font-size:1.2rem;cursor:pointer;display:none',
@@ -2547,7 +2547,7 @@
                 var str = this.getAttribute('copy');
                 this.setAttribute('title', unicode2ascii(str));
             }, false);
-            toolbar.appendChild(about);
+            // toolbar.appendChild(about);
 
             var gyroResetBtn = this.createTag('div', {
                 'style': 'position:inherit;right:4rem;cursor:pointer;bottom:0.2rem;line-height:100%'
