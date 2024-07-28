@@ -8,8 +8,9 @@
 <template>
   <div class="hello">
     <div ref="player"></div>
+    <div id="clock"></div>
     <img id="video-cover" src="../assets/GF-3.jpg" alt="Cover Image" @click="handleClick()" v-show="show" />
-    <div id="tips" v-show="!show">横屏体验感更佳</div>
+    <div id="tips" v-show="!show">横屏也可观看</div>
     <img id="logo-image" src="../assets/logo4.png" alt="Logo Image" v-show="!show" />
   </div>
 </template>
@@ -25,6 +26,7 @@
 // window.AVR = AVR
 
 /* eslint-disable */
+var vr = null
 export default {
   name: 'HelloWorld',
   props: {
@@ -34,67 +36,74 @@ export default {
     return {
       show: true,
       playUrl: '',
+      timer: undefined,
     }
   },
   mounted() {
-    console.log(window.location)
-    console.log(videoList)
-    console.log(this.getQueryString(window.location.href, 'link'))
     const link = this.getQueryString(window.location.href, 'link')
     if (link) {
-      this.playUrl = videoList.find(obj=>obj.link==link).playUrl || ''
+      this.playUrl = videoList.find((obj) => obj.link == link).playUrl || ''
     }
     console.log(this.playUrl)
-    var vr = new VR({ id: this.$refs.player })
-    // vr.init(function () {})
-    //renderer = new THREE.WebGLRenderer();
-    if (
-      navigator.userAgent.match(/iphone os 14_0/i) ||
-      navigator.userAgent.match(/iphone os 14_1/i) ||
-      navigator.userAgent.match(/iphone os 14_3/i)
-    ) {
-      AVR.__fixHlsRender = true
-    }
-    // var vr = new VR({ id: 'example' })
-
-    //vr.playText="<img src='img/play90.png' width='40' height='40'/>";
-    vr.vrbox.radius = 600
-    if (AVR.isCrossScreen()) {
-      // 调整vr视窗偏移量
-      vr.effect.separation = 2
-    }
-    vr.loadProgressManager.onLoad = function () {
-      // 视频静音
-    }
-    //AVR.useGyroscope=false;
-    vr.init(function () {})
-
-    var options = { muted: false, autoplay: false }
-    vr.play(
-      this.playUrl,
-      vr.resType.sliceVideo,
-      options
-    )
-    vr.video.setAttribute('loop', 'loop')
-    vr.video.crossOrigin = 'Anonymous'
-    // vr.toolBar.vrBtn.style.display = 'none'
-    console.log(vr.toolBar)
-
-    vr.video.onended = function () {}
-    vr.loadProgressManager.onLoad = function () {
-      console.log('loaded.........')
-    }
-    vr.loadProgressManager.onProgress = function () {
-      console.log('onProgress')
-    }
-    vr.loadProgressManager.onError = function () {
-      console.log('onError')
-    }
-    // vr.playPanorama(require('../assets/puydesancy.jpg'))
   },
   methods: {
     handleClick() {
       this.show = false
+      setInterval(this.updateClock, 1000)
+      this.initVideo()
+    },
+    initVideo() {
+      vr = new VR({ id: this.$refs.player })
+      // vr.init(function () {})
+      //renderer = new THREE.WebGLRenderer();
+      if (
+        navigator.userAgent.match(/iphone os 14_0/i) ||
+        navigator.userAgent.match(/iphone os 14_1/i) ||
+        navigator.userAgent.match(/iphone os 14_3/i)
+      ) {
+        AVR.__fixHlsRender = true
+      }
+      // var vr = new VR({ id: 'example' })
+
+      //vr.playText="<img src='img/play90.png' width='40' height='40'/>";
+      vr.vrbox.radius = 600
+      if (AVR.isCrossScreen()) {
+        // 调整vr视窗偏移量
+        vr.effect.separation = 2
+      }
+      vr.loadProgressManager.onLoad = function () {
+        // 视频静音
+      }
+      //AVR.useGyroscope=false;
+      vr.init(function () {
+      })
+
+      var options = { muted: false, autoplay: true, preload: true, }
+      vr.play(this.playUrl, vr.resType.sliceVideo, options)
+      vr.hlsConfig = {
+        autoStartLoad: true,
+    };
+      console.log(vr.video)
+      vr.video.setAttribute('loop', 'loop')
+      vr.video.crossOrigin = 'Anonymous'
+      vr.controls.gyroUnfreeze()
+      // vr.video.pause()
+
+      // vr.toolBar.vrBtn.style.display = 'none'
+      console.log(vr.toolBar.btn)
+      vr.toolBar.btn.click()
+
+      // vr.video.pause()
+      vr.video.onended = function () {}
+      vr.loadProgressManager.onLoad = function () {
+        console.log('loaded.........')
+      }
+      vr.loadProgressManager.onProgress = function () {
+        console.log('onProgress')
+      }
+      vr.loadProgressManager.onError = function () {
+        console.log('onError')
+      }
     },
     getQueryString(url, paraName) {
       const arrObj = url.split('?')
@@ -112,6 +121,18 @@ export default {
       } else {
         return ''
       }
+    },
+    updateClock() {
+      const now = new Date()
+      const year = now.getFullYear()
+      const month = String(now.getMonth() + 1).padStart(2, '0')
+      const day = String(now.getDate()).padStart(2, '0')
+      const hours = String(now.getHours()).padStart(2, '0')
+      const minutes = String(now.getMinutes()).padStart(2, '0')
+      const seconds = String(now.getSeconds()).padStart(2, '0')
+
+      const timeString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+      document.getElementById('clock').textContent = timeString
     },
   },
 }
@@ -143,6 +164,18 @@ a {
   width: 100%; */
 }
 
+#clock {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 99;
+  width: 100%;
+  height: 30px;
+  font-size: 16px;
+  color: #fff;
+  text-align: right;
+}
+
 #video-cover {
   position: absolute;
   top: 0;
@@ -154,7 +187,7 @@ a {
 }
 #tips {
   position: absolute;
-  bottom: 30px;
+  bottom: 35px;
   left: 10px;
   color: white;
   font-size: 14px;

@@ -112,7 +112,7 @@
             cubeResolution: 2048,
             rotationAngleOfZ: 0
         };
-        this.VRhint = "请取消屏幕翻转锁定后装入VR盒子中";
+        // this.VRhint = "请取消屏幕翻转锁定后装入VR盒子中";
         this.camera = new THREE.PerspectiveCamera(this.cameraPara.fov, this.cameraPara.aspect, this.cameraPara.near, this.cameraPara.far);
         this.camera.lookAt(this._controlTarget);
         this.cameraEvt = {
@@ -2023,11 +2023,13 @@
                 }
 
                 function calcDeltaLeft(x, clientWidth) {
-                    return 2 * Math.PI * x / clientWidth * scope.rotateSpeed
+                    return 3 * Math.PI * x / clientWidth * scope.rotateSpeed
                 }
 
                 function calcDeltaUp(y, clientHeight) {
-                    return 2 * Math.PI * y / clientHeight * scope.rotateSpeed
+                    let zoom = 3
+                    if(AVR.isCrossScreen()) zoom = 5
+                    return zoom * Math.PI * y / clientHeight * scope.rotateSpeed
                 }
                 var mouseDown = false;
 
@@ -2068,7 +2070,7 @@
                 }
 
                 function touchmove(event) {
-                    //console.log( 'handleTouchMoveRotate' );
+                    console.log( 'handleTouchMoveRotate' );
 
                     event.preventDefault();
 
@@ -2548,13 +2550,13 @@
             toolbar.appendChild(about);
 
             var gyroResetBtn = this.createTag('div', {
-                'style': 'position:inherit;right:5.8rem;cursor:pointer;bottom:0.2rem;line-height:100%'
+                'style': 'position:inherit;right:4rem;cursor:pointer;bottom:0.2rem;line-height:100%'
             }, {
                 innerHTML: AVR.playerIcon.resetLookAtSvg,
             });
             toolbar.appendChild(gyroResetBtn);
             var gyroBtn = this.createTag('div', {
-                'style': 'position:inherit;right:3.5rem;cursor:pointer;bottom:0.1rem;line-height:100%'
+                'style': 'position:inherit;right:1.5rem;cursor:pointer;bottom:0.1rem;line-height:100%'
             }, {
                 innerHTML: AVR.playerIcon.gyroSvg
             });
@@ -2565,7 +2567,7 @@
                 'innerHTML': AVR.playerIcon.vrSvg
             });
 
-            toolbar.appendChild(vrBtn);
+            // toolbar.appendChild(vrBtn);
 
             var progressBar = this.createTag('div', {
                 'style': 'position:inherit;top:0rem;width:100%;height:0.1rem;background:rgba(255,255,255,.3);cursor:pointer'

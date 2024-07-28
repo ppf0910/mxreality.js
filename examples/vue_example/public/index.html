@@ -8,15 +8,18 @@
 <!DOCTYPE html>
 <html lang="">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>GTS4.0-GoFront</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <title>GF-GTS4.0</title>
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong
+        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to
+        continue.</strong
+      >
     </noscript>
     <div id="app"></div>
     <script src="./three.js"></script>
@@ -24,5 +27,30 @@
     <script src="./hls.js"></script>
     <script src="./data.js"></script>
     <!-- built files will be auto injected -->
+    <script>
+      // 获取 URL 参数的函数
+      function getParameterByName(name, url) {
+        if (!url) url = window.location.href
+        name = name.replace(/[\[\]]/g, '\\$&')
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+          results = regex.exec(url)
+        if (!results) return null
+        if (!results[2]) return ''
+        return decodeURIComponent(results[2].replace(/\+/g, ' '))
+      }
+
+      // 设置页面标题
+      document.addEventListener('DOMContentLoaded', function () {
+        var linkParam = getParameterByName('link')
+        if (linkParam) {
+          var foundVideo = videoList.find(function (video) {
+            return video.link === linkParam
+          })
+          if (foundVideo) {
+            document.title = foundVideo.name
+          }
+        }
+      })
+    </script>
   </body>
 </html>
