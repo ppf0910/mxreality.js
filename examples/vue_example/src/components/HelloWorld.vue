@@ -130,8 +130,10 @@ export default {
       const hours = String(now.getHours()).padStart(2, '0')
       const minutes = String(now.getMinutes()).padStart(2, '0')
       const seconds = String(now.getSeconds()).padStart(2, '0')
+      const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
+      const dayString = weekDays[now.getDay()]
 
-      const timeString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+      const timeString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds} ${dayString}`
       document.getElementById('clock').textContent = timeString
     },
   },
